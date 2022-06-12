@@ -1,0 +1,29 @@
+﻿create database InfoToolsSV;
+use InfoToolsSV;
+
+create table Usuarios(
+id int identity(1000,1),
+Usuario varchar(50),
+Contrasenia varbinary(500)
+);
+
+create procedure SP_AgregarUsuario
+@Usuario varchar(50),
+@Contrasenia varchar(50),
+@Patron varchar(50)
+as
+begin
+insert into Usuarios(Usuario, Contrasenia) values(@Usuario,ENCRYPTBYPASSPHRASE(@Patron,@Contrasenia))
+end;
+
+create procedure SP_ValidarUsuario
+@Usuario varchar(50),
+@Contrasenia varchar(50),
+@Patron varchar(50)
+as begin
+select * from Usuarios where Usuario = @Usuario and CONVERT(varchar(50),DECRYPTBYPASSPHRASE(@Patron,Contrasenia))=@Contrasenia
+end;
+
+select * from Usuarios;
+
+SP_AgregarUsuario 'John','Cantrasenia1234','InfoToolsSv';
